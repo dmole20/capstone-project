@@ -4,6 +4,11 @@ const shoesSchema = new mongoose.Schema({
   shoesName: { type: String, required: true },
   imageUrl: { type: String },
   price: { type: Number, required: true },
+  retailer: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
 });
 
 const Shoes = mongoose.model("Shoes", shoesSchema);

@@ -26,6 +26,7 @@ app.use(
 
 app.get("/", (req, res) => res.send("aa"));
 app.use("/api/users", userRouter);
+app.use("/api/retailers", retailerRouter);
 const handleListening = () =>
   console.log(`✅ Server listenting on http://localhost:${PORT}`);
 
