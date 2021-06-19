@@ -25,7 +25,7 @@ export const re_postJoin = async (req, res) => {
       shop,
       address,
     });
-    return res.redirect("/re-join");
+    return res.sendStatus(201);
   } catch (error) {
     return res.status(400).json({ errorMessage: error._message });
   }
@@ -45,12 +45,12 @@ export const re_postLogin = async (req, res) => {
   }
   req.session.loggedIn = true;
   req.session.retailer = retailer;
-  return res.redirect("/");
+  return res.sendStatus(201);
 };
 
 export const re_logout = (req, res) => {
   req.session.destroy();
-  return res.redirect("/");
+  return res.sendStatus("201");
 };
 
 export const getRetailerDetail = async (req, res) => {
