@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   FormErrorMessage,
@@ -15,9 +14,9 @@ import { Logo } from 'Logo';
 import { useHistory, useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeSwitcher } from 'ColorModeSwitcher';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-
-function LoginPage() {
+export default function RegisterPage() {
   const toast = useToast();
   const {
     control,
@@ -47,9 +46,12 @@ function LoginPage() {
   async function onSubmit(values) {
     toast.closeAll();
     setIsLoading(true);
+    console.log(values);
+    let joinPostCall = await axios.post('/api/users/join', {
+      ...values,
+    });
 
-    let loginPostCall = await axios.post('/api/users/login', { ...values });
-    console.log(loginPostCall);
+    console.log(joinPostCall);
     return new Promise(resolve => {
       setTimeout(() => {
         if (values.loginID === 'wrong') {
@@ -74,17 +76,12 @@ function LoginPage() {
               isClosable: true,
             });
           }
-          dispatch({ type: 'setAuthorizationToken' });
+          //   dispatch({ type: 'setAuthorizationToken' });
         }
         setIsLoading(false);
       }, 500);
     });
   }
-  const handleRegister = () => {
-    history.push('/register');
-    console.log('register');
-  };
-
   return (
     <Box minH="100%">
       <Box position="absolute" top="3" right="3">
@@ -95,6 +92,19 @@ function LoginPage() {
         <Text>사용자 페이지</Text>
         <Box minW="400px">
           <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl isInvalid={errors?.name}>
+              <FormLabel htmlFor="name">이름</FormLabel>
+              <Controller
+                render={({ field }) => <Input {...field} />}
+                name="name"
+                control={control}
+                defaultValue=""
+                rules={{ required: '이름 필수 입력값입니다.' }}
+              />
+              <FormErrorMessage>
+                {errors?.name && errors?.name.message}
+              </FormErrorMessage>
+            </FormControl>
             <FormControl isInvalid={errors?.username}>
               <FormLabel htmlFor="username">아이디</FormLabel>
               <Controller
@@ -121,15 +131,79 @@ function LoginPage() {
                 {errors?.password && errors?.password.message}
               </FormErrorMessage>
             </FormControl>
+            <FormControl isInvalid={errors?.passwrodConfirm}>
+              <FormLabel htmlFor="passwrodConfirm">비밀번호 확인</FormLabel>
+              <Controller
+                render={({ field }) => <Input type="password" {...field} />}
+                name="passwrodConfirm"
+                control={control}
+                defaultValue=""
+                rules={{ required: '비밀번호는 필수 입력값입니다.' }}
+              />
+              <FormErrorMessage>
+                {errors?.passwrodConfirm && errors?.passwrodConfirm.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors?.phone}>
+              <FormLabel htmlFor="phone">전화번호</FormLabel>
+              <Controller
+                render={({ field }) => <Input {...field} />}
+                name="phone"
+                control={control}
+                defaultValue=""
+                rules={{ required: '전화번호 필수 입력값입니다.' }}
+              />
+              <FormErrorMessage>
+                {errors?.phone && errors?.phone.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors?.nikeId}>
+              <FormLabel htmlFor="nikeId">Nike.com ID</FormLabel>
+              <Controller
+                render={({ field }) => <Input {...field} />}
+                name="nikeId"
+                control={control}
+                defaultValue=""
+                rules={{ required: 'Nike.com ID 필수 입력값입니다.' }}
+              />
+              <FormErrorMessage>
+                {errors?.nikeId && errors?.nikeId.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors?.birthday}>
+              <FormLabel htmlFor="birthday">
+                생년월일 6자리 (ex - 950911)
+              </FormLabel>
+              <Controller
+                render={({ field }) => <Input {...field} />}
+                name="birthday"
+                control={control}
+                defaultValue=""
+                rules={{ required: '생년월일 필수 입력값입니다.' }}
+              />
+              <FormErrorMessage>
+                {errors?.birthday && errors?.birthday.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors?.size}>
+              <FormLabel htmlFor="size">신발 사이즈</FormLabel>
+              <Controller
+                render={({ field }) => <Input {...field} />}
+                name="size"
+                control={control}
+                defaultValue=""
+                rules={{ required: '신발 사이즈 필수 입력값입니다.' }}
+              />
+              <FormErrorMessage>
+                {errors?.size && errors?.size.message}
+              </FormErrorMessage>
+            </FormControl>
             <Button
               mt={4}
               colorScheme="teal"
               type="submit"
               isLoading={isLoading}
             >
-              로그인
-            </Button>
-            <Button mt={4} isLoading={isLoading} onClick={handleRegister}>
               회원가입
             </Button>
           </form>
@@ -138,4 +212,3 @@ function LoginPage() {
     </Box>
   );
 }
-export default LoginPage;
