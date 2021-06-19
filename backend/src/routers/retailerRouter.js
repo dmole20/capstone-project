@@ -13,9 +13,9 @@ import {
 
 const retailerRouter = express.Router();
 
-retailerRouter.post("/re_join", publicOnlyMiddleware, re_postJoin);
-retailerRouter.post("/re_login", publicOnlyMiddleware, re_postLogin);
-retailerRouter.get("/re_logout", protectorMiddleware, re_logout);
+retailerRouter.post("/re_join", re_postJoin);
+retailerRouter.post("/re_login", re_postLogin);
+retailerRouter.get("/re_logout", re_logout);
 retailerRouter.get("/:id", getRetailerDetail);
 
 export default retailerRouter;

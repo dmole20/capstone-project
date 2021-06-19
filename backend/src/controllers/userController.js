@@ -60,5 +60,5 @@ export const postLogin = async (req, res) => {
 
 export const logout = (req, res) => {
   req.session.destroy();
-  return res.sendStatus(201);
+  return res.sendStatus(200);
 };

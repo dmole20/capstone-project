@@ -50,7 +50,7 @@ export const re_postLogin = async (req, res) => {
 
 export const re_logout = (req, res) => {
   req.session.destroy();
-  return res.sendStatus("201");
+  return res.sendStatus("200");
 };
 
 export const getRetailerDetail = async (req, res) => {
