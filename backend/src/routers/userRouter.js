@@ -4,8 +4,8 @@ import { publicOnlyMiddleware, userOnlyMiddleware } from "../middlewares";
 
 const userRouter = express.Router();
 
-userRouter.post("/join", publicOnlyMiddleware, postJoin);
-userRouter.post("/login", publicOnlyMiddleware, postLogin);
-userRouter.get("/logout", userOnlyMiddleware, logout);
+userRouter.post("/join", postJoin);
+userRouter.post("/login", postLogin);
+userRouter.get("/logout", logout);
 
 export default userRouter;
