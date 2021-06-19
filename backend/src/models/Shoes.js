@@ -7,8 +7,9 @@ const shoesSchema = new mongoose.Schema({
   retailer: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "User",
+    ref: "Retailer",
   },
+  applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const Shoes = mongoose.model("Shoes", shoesSchema);

@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   nikeId: { type: String, required: true },
   birthday: { type: Date },
   size: { type: Number },
+  applyings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Shoes" }],
 });
 
 userSchema.pre("save", async function () {

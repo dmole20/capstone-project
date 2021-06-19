@@ -1,9 +1,16 @@
 import express from "express";
-import { getShoes, uploadShoes } from "../controllers/shoesController";
-import { retailerOnlyMiddleware } from "../middlewares";
+import {
+  applyEvent,
+  getShoes,
+  getShoesDetail,
+  uploadShoes,
+} from "../controllers/shoesController";
+import { retailerOnlyMiddleware, userOnlyMiddleware } from "../middlewares";
 const shoesRouter = express.Router();
 
 shoesRouter.get("/", getShoes);
 shoesRouter.post("/", retailerOnlyMiddleware, uploadShoes);
+shoesRouter.get("/:id", getShoesDetail);
+shoesRouter.get("/:id/applying", userOnlyMiddleware, applyEvent);
 
 export default shoesRouter;
