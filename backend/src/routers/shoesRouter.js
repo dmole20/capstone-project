@@ -11,6 +11,6 @@ const shoesRouter = express.Router();
 shoesRouter.get("/", getShoes);
 shoesRouter.post("/", retailerOnlyMiddleware, uploadShoes);
 shoesRouter.get("/:id", getShoesDetail);
-shoesRouter.get("/:id/applying", userOnlyMiddleware, applyEvent);
+shoesRouter.post("/:id/applying", userOnlyMiddleware, applyEvent);
 
 export default shoesRouter;

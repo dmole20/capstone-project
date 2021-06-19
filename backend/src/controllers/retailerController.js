@@ -52,3 +52,12 @@ export const re_logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
 };
+
+export const getRetailerDetail = async (req, res) => {
+  const { id } = req.params;
+  const retailer = await Retailer.findById(id).populate(shoes);
+  if (!retailer) {
+    res.status(404).json({ errorMessage: "Not found." });
+  }
+  return res.json({ retailer });
+};
