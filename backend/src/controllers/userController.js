@@ -35,7 +35,7 @@ export const postJoin = async (req, res) => {
       birthday,
       size,
     });
-    return res.redirect("/join");
+    return res.sendStatus(201);
   } catch (error) {
     return res.status(400).json({ errorMessage: error._message });
   }
@@ -55,10 +55,10 @@ export const postLogin = async (req, res) => {
   }
   req.session.loggedIn = true;
   req.session.user = user;
-  return res.redirect("/");
+  return res.sendStatus(201);
 };
 
 export const logout = (req, res) => {
   req.session.destroy();
-  return res.redirect("/");
+  return res.sendStatus(201);
 };
