@@ -55,7 +55,6 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => res.send("aa"));
 app.use("/api/users", userRouter);
 app.use("/api/retailers", retailerRouter);
 app.use("/api/shoes", shoesRouter);

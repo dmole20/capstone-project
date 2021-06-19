@@ -10,6 +10,7 @@ const shoesSchema = new mongoose.Schema({
     ref: "Retailer",
   },
   applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  winner: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const Shoes = mongoose.model("Shoes", shoesSchema);
