@@ -149,29 +149,52 @@ export const applyEvent = async (req, res) => {
   return res.sendStatus(200);
 };
 
-// export const drawWinner = async (req, res) => {
-//   const {
-//     session: { retailer },
-//     params: { id },
-//     body: {
-//       s_230,
-//       s_235,
-//       s_240,
-//       s_245,
-//       s_250,
-//       s_255,
-//       s_260,
-//       s_265,
-//       s_270,
-//       s_275,
-//       s_280,
-//       s_285,
-//     },
-//   } = req;
-//   const shoes = await Shoes.findById(id).populate("applicants");
-//   if (!shoes) {
-//     return res.status(404).json({ errorMessage: "Not found." });
-//   }
+const drawForSize = (applicantsNum, winnerNum) => {
+  let randomIndices = [];
+  for (let i = 0; i < winnerNum; i++) {
+    const randomIndex = Math.floor(Math.random() * applicantsNum.length);
+    if (!randomIndices.includes(randomIndex)) {
+      randomIndices.push(random);
+    } else {
+      i--;
+    }
+  }
+  return randomIndices;
+};
 
-//   // draw
-// };
+export const drawWinner = async (req, res) => {
+  const {
+    session: {
+      retailer: { _id },
+    },
+    params: { id },
+  } = req;
+  const shoes = await Shoes.findById(id);
+  if (!shoes) {
+    return res.status(404).json({ errorMessage: "Not found." });
+  }
+
+  if (String(shoes.retailer) !== String(_id)) {
+    return res.status(403).json({ errorMessage: "You are not a seller." });
+  }
+
+  // draw
+  const winner_240 = drawForSize(
+    shoes.applicants.m_240.length,
+    shoes.sizeStocks.m_240
+  );
+  for (let i = 0; i < winner_240.length; i++) {
+    const winner = shoes.applicants.m_240[winner_240[i]];
+    shoes.winner.m_240.push(winner);
+  }
+
+  const winner_285 = drawForSize(
+    shoes.applicants.m_285.length,
+    shoes.sizeStocks.m_285
+  );
+  for (let i = 0; i < winner_285.length; i++) {
+    const winner = shoes.applicants.m_285[winner_285[i]];
+    shoes.winner.m_285.push(winner);
+  }
+  shoes.save();
+};
