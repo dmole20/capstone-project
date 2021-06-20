@@ -55,16 +55,26 @@ export const deleteShoes = async (req, res) => {
 
 export const applyEvent = async (req, res) => {
   const {
-    session: { user },
+    session: {
+      user: { _id },
+    },
     params: { id },
   } = req;
+
   const shoes = await Shoes.findById(id);
   if (!shoes) {
     return res.status(404).json({ errorMessage: "Not found." });
   }
+
+  const user = await User.findById(_id);
+  if (!user) {
+    return res.status(404).json({ errorMessage: "Not found." });
+  }
+
   if (shoes.applicants.includes(user._id)) {
     return res.status(400).json({ errorMessage: "Already applied." });
   }
+
   shoes.applicants.push(user._id);
   user.applyings.push(shoes._id);
   shoes.save();
