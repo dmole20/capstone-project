@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   birthday: { type: Date },
   size: { type: Number },
   applyings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Shoes" }],
+  wons: [{ type: mongoose.Schema.Types.ObjectId, ref: "Shoes" }],
 });
 
 userSchema.pre("save", async function () {
