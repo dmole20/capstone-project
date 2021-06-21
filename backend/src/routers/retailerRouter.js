@@ -16,6 +16,6 @@ const retailerRouter = express.Router();
 retailerRouter.post("/re_join", re_postJoin);
 retailerRouter.post("/re_login", re_postLogin);
 retailerRouter.get("/re_logout", re_logout);
-retailerRouter.get("/:id", getRetailerDetail);
+retailerRouter.get("/:id", getRetailerDetail); // 해당 id를 가진 retailer
 
 export default retailerRouter;

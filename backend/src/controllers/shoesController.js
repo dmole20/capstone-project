@@ -7,6 +7,7 @@ export const getShoes = async (req, res) => {
   return res.json({ shoes });
 };
 
+// shoes의 이름, image, 가격, 240~310 각 사이즈 수량 받아서 db에 추가
 export const uploadShoes = async (req, res) => {
   const {
     retailer: { _id },
@@ -64,6 +65,7 @@ export const uploadShoes = async (req, res) => {
   }
 };
 
+// 해당 id의 shoes 정보
 export const getShoesDetail = async (req, res) => {
   const { id } = req.params;
   const shoes = await Shoes.findById(id).populate("retailer");
@@ -73,6 +75,7 @@ export const getShoesDetail = async (req, res) => {
   return res.json({ shoes });
 };
 
+// 해당 id의 shoes를 db에서 삭제. 아직 연관된 다른 collection에서 삭제는 구현안됨.
 export const deleteShoes = async (req, res) => {
   const { id } = req.params;
   const {
@@ -89,6 +92,7 @@ export const deleteShoes = async (req, res) => {
   return res.sendStatus(200);
 };
 
+// (user로 로그인됐을 시에만 가능) 해당 id의 shoes의 응모에 참여.
 export const applyEvent = async (req, res) => {
   const {
     session: {
@@ -162,6 +166,7 @@ const drawForSize = (applicantsNum, winnerNum) => {
   return randomIndices;
 };
 
+// (해당 shoes의 주인 retailer로 로그인했을 시에만) 해당 id의 shoes의 추첨하고 당첨자를 db에 저장 (미완성)
 export const drawWinner = async (req, res) => {
   const {
     session: {
