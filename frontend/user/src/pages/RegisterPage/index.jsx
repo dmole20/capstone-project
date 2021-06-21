@@ -9,6 +9,8 @@ import {
   useToast,
   VStack,
   Text,
+  useRadioGroup,
+  HStack,
 } from '@chakra-ui/react';
 import { Logo } from 'Logo';
 import { useHistory, useLocation } from 'react-router';
@@ -16,6 +18,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ColorModeSwitcher } from 'ColorModeSwitcher';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import RadioCard from 'components/RadioCard';
+
 export default function RegisterPage() {
   const toast = useToast();
   const {
@@ -46,42 +50,60 @@ export default function RegisterPage() {
   async function onSubmit(values) {
     toast.closeAll();
     setIsLoading(true);
-    console.log(values);
-    let joinPostCall = await axios.post('/api/users/join', {
-      ...values,
-    });
+    let joinPostCall = await axios
+      .post('/api/users/join', {
+        ...values,
+        size: shoeSize,
+      })
+      .then(() => {
+        if (!toast.isActive('login-success')) {
+          toast({
+            id: 'login-success',
+            title: '가입 성공.',
+            description: 'Hello World',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+        history.push('/login');
+      })
+      .catch(() => {
+        if (!toast.isActive('login-error')) {
+          toast({
+            id: 'login-error',
+            title: '가입 실패',
+            description: '아이디 또는 비밀번호를 다시 확인해주세요.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
 
     console.log(joinPostCall);
-    return new Promise(resolve => {
-      setTimeout(() => {
-        if (values.loginID === 'wrong') {
-          if (!toast.isActive('login-error')) {
-            toast({
-              id: 'login-error',
-              title: '로그인 실패',
-              description: '아이디 또는 비밀번호를 다시 확인해주세요.',
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            });
-          }
-        } else {
-          if (!toast.isActive('login-success')) {
-            toast({
-              id: 'login-success',
-              title: '로그인 성공.',
-              description: 'Hello World',
-              status: 'success',
-              duration: 9000,
-              isClosable: true,
-            });
-          }
-          //   dispatch({ type: 'setAuthorizationToken' });
-        }
-        setIsLoading(false);
-      }, 500);
-    });
+    return;
   }
+  let options = [
+    240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 305, 310,
+  ].map(d => d.toString());
+
+  // const options = ['react', 'vue', 'svelte'];
+
+  const {
+    getRootProps,
+    getRadioProps,
+    value: shoeSize,
+  } = useRadioGroup({
+    name: 'framework',
+    defaultValue: '240',
+    onChange: console.log,
+  });
+
+  const group = getRootProps();
   return (
     <Box minH="100%">
       <Box position="absolute" top="3" right="3">
@@ -187,17 +209,28 @@ export default function RegisterPage() {
             </FormControl>
             <FormControl isInvalid={errors?.size}>
               <FormLabel htmlFor="size">신발 사이즈</FormLabel>
-              <Controller
+              {/* <Controller
                 render={({ field }) => <Input {...field} />}
                 name="size"
                 control={control}
                 defaultValue=""
                 rules={{ required: '신발 사이즈 필수 입력값입니다.' }}
-              />
+              /> */}
+              <HStack {...group}>
+                {options.map(value => {
+                  const radio = getRadioProps({ value });
+                  return (
+                    <RadioCard key={value} {...radio}>
+                      {value}
+                    </RadioCard>
+                  );
+                })}
+              </HStack>
               <FormErrorMessage>
                 {errors?.size && errors?.size.message}
               </FormErrorMessage>
             </FormControl>
+
             <Button
               mt={4}
               colorScheme="teal"

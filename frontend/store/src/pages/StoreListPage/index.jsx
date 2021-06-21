@@ -51,11 +51,14 @@ const StoreListPage = props => {
   const query = useQuery('shoes', async () => {
     return await axios.get('/api/shoes/').then(data => data.data);
   });
+  const profile = useQuery('profile', async () => {
+    return await axios.get('/api/retailers/profile').then(data => data.data);
+  });
 
   const data = useMemo(
     () =>
-      query?.data?.shoes?.length > 0
-        ? query?.data?.shoes?.map((shoe, idx) => ({
+      profile?.data?.shoes?.length > 0
+        ? profile?.data?.shoes?.map((shoe, idx) => ({
             ...shoe,
             id: shoe._id,
             col1: idx + 1,
@@ -63,7 +66,7 @@ const StoreListPage = props => {
             status: shoe.status,
           }))
         : [],
-    [colorMode, query.data]
+    [colorMode, profile.data]
   );
   const columns = useMemo(
     () => [
@@ -83,13 +86,13 @@ const StoreListPage = props => {
         Header: '마감현황',
         accessor: 'col3',
         Cell: ({ row }) => {
-          if (row.original.status === 'done') {
+          if (row.original.deadlineStatus === 2) {
             return (
               <Badge variant="outline" colorScheme="red" fontSize="xl">
                 완료
               </Badge>
             );
-          } else if (row.original.status === 'progressing') {
+          } else if (row.original.deadlineStatus === 1) {
             return (
               <Badge variant="outline" colorScheme="green" fontSize="xl">
                 진행중
@@ -138,7 +141,7 @@ const StoreListPage = props => {
           });
         }
         onClose();
-        query.refetch();
+        profile.refetch();
       })
       .catch(() => {
         if (!toast.isActive('login-error')) {

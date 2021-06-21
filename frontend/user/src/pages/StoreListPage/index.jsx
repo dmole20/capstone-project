@@ -1,13 +1,14 @@
-import { Button } from "@chakra-ui/button";
-import { useColorMode } from "@chakra-ui/color-mode";
+import { Button } from '@chakra-ui/button';
+import { useColorMode } from '@chakra-ui/color-mode';
 import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-} from "@chakra-ui/form-control";
-import { useDisclosure } from "@chakra-ui/hooks";
-import { Input } from "@chakra-ui/input";
-import { Box, Flex, HStack } from "@chakra-ui/layout";
+} from '@chakra-ui/form-control';
+import { useDisclosure } from '@chakra-ui/hooks';
+import { Input } from '@chakra-ui/input';
+import { Box, Flex, HStack } from '@chakra-ui/layout';
+import { Wrap, WrapItem, Center, Image, Badge } from '@chakra-ui/react';
 import {
   Modal,
   ModalBody,
@@ -16,123 +17,153 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-} from "@chakra-ui/modal";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/tabs";
-import { useToast } from "@chakra-ui/toast";
-import DataTable from "components/DataTable";
-import EmployeeDetailPage from "pages/EmployeeDetailPage";
-import { useEffect, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Switch, useHistory } from "react-router";
-import { useRouteMatch } from "react-router";
-import { PrivateRoute } from "routes/ProtectedRoutes";
+} from '@chakra-ui/modal';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs';
+import { useToast } from '@chakra-ui/toast';
+import DataTable from 'components/DataTable';
+import EmployeeDetailPage from 'pages/EmployeeDetailPage';
+import { useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Switch, useHistory } from 'react-router';
+import { useRouteMatch } from 'react-router';
+import { PrivateRoute } from 'routes/ProtectedRoutes';
+import { useQuery } from 'react-query';
+import axios from 'axios';
+import ConfirmModal from 'components/ConfirmModal';
 
-const StoreListPage = (props) => {
+const StoreListPage = props => {
   const { url } = useRouteMatch();
   const history = useHistory();
 
-  const [tabIndex, setTabIndex] = useState(0);
   const { colorMode } = useColorMode();
-
-  const handleTabsChange = (index) => {
-    setTabIndex(index);
-  };
-  //   useEffect(() => {
-  //     if (tabIndex === 0) {
-  //       history.push(url);
-  //     } else if (tabIndex === 1) {
-  //       history.push(`${url}/contents`);
-  //     }
-  //   }, [tabIndex]);
-
-  const data = useMemo(
-    () => [
-      {
-        id: 1,
-        col1: "1",
-        col2: "나이키 강남",
-        col3: "관리자1",
-      },
-      {
-        id: 2,
-        col1: "2",
-        col2: "나이키 더현대 서울",
-        col3: "관리자2",
-      },
-      {
-        id: 3,
-        col1: "3",
-        col2: "홍대 Snkrs",
-        col3: "관리자3",
-      },
-    ],
-    [colorMode]
+  const drawListQuery = useQuery(
+    'list',
+    async () => await axios.get('/api/shoes').then(data => data.data)
   );
-  const columns = useMemo(
-    () => [
-      {
-        Header: "NO",
-        accessor: "col1",
-      },
-      {
-        Header: "매장명",
-        accessor: "col2",
-      },
-      {
-        Header: "관리자명",
-        accessor: "col3",
-      },
-    ],
-    [colorMode]
-  );
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
-  const handleRowClick = (val) => {
-    history.push(`${url}/${val.id}`);
-  };
 
-  function onSubmit(values) {
+  const handle0Progress = () => {
+    if (!toast.isActive('login-error')) {
+      toast({
+        id: 'login-error',
+        title: '응모 예정',
+        description: '아직 시작 전인 응모입니다.',
+        status: 'warning',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+  const handle2Progress = () => {
+    if (!toast.isActive('login-error')) {
+      toast({
+        id: 'login-error',
+        title: '응모 마감',
+        description: '마감된 응모입니다.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedID, setSelectedID] = useState(null);
+
+  const handleItemClick = (e, shoe) => {
     toast.closeAll();
-    setIsLoading(true);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (values.loginID === "wrong") {
-          if (!toast.isActive("login-error")) {
-            toast({
-              id: "login-error",
-              title: "로그인 실패",
-              description: "아이디 또는 비밀번호를 다시 확인해주세요.",
-              status: "error",
-              duration: 9000,
-              isClosable: true,
-            });
-          }
-        } else {
-          if (!toast.isActive("login-success")) {
-            toast({
-              id: "login-success",
-              title: "등록 성공.",
-              description: "Hello World",
-              status: "success",
-              duration: 9000,
-              isClosable: true,
-            });
-          }
+
+    if (shoe.deadlineStatus === 0) {
+      handle0Progress();
+    } else if (shoe.deadlineStatus === 2) {
+      handle2Progress();
+    } else {
+      setSelectedID(shoe._id);
+      onOpen();
+    }
+  };
+  const onSubmit = async () => {
+    let drawEnter = await axios
+      .post(`/api/shoes/${selectedID}/draw`)
+      .then(() => {
+        if (!toast.isActive('login-error')) {
+          toast({
+            id: 'login-error',
+            title: '응모 성공',
+            description: '응모에 성공했습니다.',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          });
         }
-        setIsLoading(false);
-      }, 500);
-    });
-  }
+      })
+      .catch(() => {
+        if (!toast.isActive('login-error')) {
+          toast({
+            id: 'login-error',
+            title: '응모실패',
+            description: '오류가 발생했습니다.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .finally(() => {
+        onClose();
+      });
+  };
   return (
     <Box>
-      <DataTable data={data} columns={columns} onRowClick={handleRowClick} />
+      <ConfirmModal
+        title={'응모하기'}
+        isOpen={isOpen}
+        onClose={onClose}
+        onSubmit={onSubmit}
+      />
+      <Wrap p={5} spacing={10}>
+        {drawListQuery?.data?.shoes
+          ? drawListQuery?.data?.shoes.map(shoe => (
+              <WrapItem key={shoe._id} onClick={e => handleItemClick(e, shoe)}>
+                <Center
+                  w="360px"
+                  // h="160px"
+                  border="1px solid teal"
+                  _hover={{
+                    transform: 'scale(1.1)',
+                    transition: 'all .2s ease-in',
+                  }}
+                  display="flex"
+                  flexDir="column"
+                  cursor="pointer"
+                  p={4}
+                >
+                  {shoe.retailer.shop}
+                  <Box>{shoe.shoesName}</Box>
+                  <Image src={shoe.imageUrl}></Image>
+                  <Box paddingY={3}>
+                    {shoe.deadlineStatus === 2 && (
+                      <Badge fontSize="2xl" colorScheme="red">
+                        응모 마감
+                      </Badge>
+                    )}
+                    {shoe.deadlineStatus === 1 && (
+                      <Badge fontSize="2xl" colorScheme="green">
+                        진행중
+                      </Badge>
+                    )}
+                    {shoe.deadlineStatus === 0 && (
+                      <Badge fontSize="2xl" colorScheme="yellow">
+                        응모 예정
+                      </Badge>
+                    )}
+                  </Box>
+                </Center>
+              </WrapItem>
+            ))
+          : null}
+      </Wrap>
+
+      {/* <DataTable data={data} columns={columns} onRowClick={handleRowClick} /> */}
     </Box>
   );
 };
