@@ -1,6 +1,11 @@
 import Retailer from "../models/Retailer";
 import bcrypt from "bcrypt";
 
+export const getRetailers = async (req, res) => {
+  const retailers = await Retailer.find({}).populate("shoes");
+  return res.json(retailers);
+};
+
 export const re_postJoin = async (req, res) => {
   const { username, password, passwrodConfirm, phone, shop, address } =
     req.body;
