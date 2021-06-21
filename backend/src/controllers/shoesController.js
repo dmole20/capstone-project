@@ -65,7 +65,39 @@ export const uploadShoes = async (req, res) => {
   }
 };
 
-export const changeDeadlineStatus = async (req, res) => {};
+export const startDeadline = async (req, res) => {
+  const { id } = req.params;
+  const {
+    retailer: { _id },
+  } = req.session;
+  const shoes = await Shoes.findById(id);
+  if (!shoes) {
+    return res.status(404).json({ errorMessage: "Not found." });
+  }
+  if (String(shoes.retailer) !== String(_id)) {
+    return res.status(403).json({ errorMessage: "You are not a seller." });
+  }
+  shoes.deadlineStatus = 1;
+  await shoes.save();
+  return res.sendStatus(200);
+};
+
+export const endDeadline = async (req, res) => {
+  const { id } = req.params;
+  const {
+    retailer: { _id },
+  } = req.session;
+  const shoes = await Shoes.findById(id);
+  if (!shoes) {
+    return res.status(404).json({ errorMessage: "Not found." });
+  }
+  if (String(shoes.retailer) !== String(_id)) {
+    return res.status(403).json({ errorMessage: "You are not a seller." });
+  }
+  shoes.deadlineStatus = 2;
+  await shoes.save();
+  return res.sendStatus(200);
+};
 
 // 해당 id의 shoes 정보
 export const getShoesDetail = async (req, res) => {
