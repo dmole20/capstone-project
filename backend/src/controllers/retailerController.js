@@ -53,11 +53,22 @@ export const re_logout = (req, res) => {
   return res.sendStatus("200");
 };
 
-export const getRetailerDetail = async (req, res) => {
-  const { id } = req.params;
-  const retailer = await Retailer.findById(id).populate(shoes);
+export const getRetailerProfile = async (req, res) => {
+  const {
+    retailer: { _id },
+  } = req.session;
+  const retailer = await Retailer.findById(_id).populate("shoes");
   if (!retailer) {
     res.status(404).json({ errorMessage: "Not found." });
   }
-  return res.json({ retailer });
+  return res.json(retailer);
+};
+
+export const getRetailerDetail = async (req, res) => {
+  const { id } = req.params;
+  const retailer = await Retailer.findById(id).populate("shoes");
+  if (!retailer) {
+    res.status(404).json({ errorMessage: "Not found." });
+  }
+  return res.json(retailer);
 };
