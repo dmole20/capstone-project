@@ -12,6 +12,7 @@ import useLocalStorageState from 'hooks/useLocalStoargeState';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import ProtectedRoutes from 'routes/ProtectedRoutes';
+import RegisterPage from 'pages/RegisterPage';
 
 const NavigationOptions = [
   {
@@ -21,7 +22,7 @@ const NavigationOptions = [
   },
   {
     id: 'product',
-    displayValue: '판매 상품 관리',
+    displayValue: '기프트 관리',
     slug: '/product',
   },
 ];
@@ -69,6 +70,11 @@ function App() {
               <Route exact path="/login">
                 <Center minH="100vh" p={3}>
                   <LoginPage />
+                </Center>
+              </Route>
+              <Route exact path="/register">
+                <Center minH="100vh" p={3}>
+                  <RegisterPage />
                 </Center>
               </Route>
               <Route path="/">
