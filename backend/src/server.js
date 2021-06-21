@@ -15,34 +15,6 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const logger = morgan("dev");
 
-// fake data
-// import Retailer from "./models/Retailer";
-// import Shoes from "./models/Shoes";
-// import bcrypt from "bcrypt";
-
-// let ini = 0;
-// const fakeInit = async () => {
-//   const retailer = await Retailer.create({
-//     username: "aa",
-//     password: "sd231fsd",
-//     phone: "010-1234-1234",
-//     shop: "aa",
-//     address: "aa",
-//   });
-//   const newShoes = await Shoes.create({
-//     shoesName: "YEEZY",
-//     imageUrl:
-//       "https://kream-phinf.pstatic.net/MjAyMTA2MTRfMjI1/M…PNG/p_cc7b5b8c518c433fa75323cc68b60838.png?type=m",
-//     price: 28,
-//     retailer: retailer._id,
-//   });
-//   ini = 1;
-// };
-// if (ini === 0) {
-//   fakeInit();
-// }
-//
-
 app.use(logger);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
