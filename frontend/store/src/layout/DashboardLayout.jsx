@@ -1,17 +1,19 @@
-import { Button } from "@chakra-ui/button";
-import { Box, Divider, Flex } from "@chakra-ui/layout";
-import { Text } from "@chakra-ui/react";
-import { ColorModeSwitcher } from "ColorModeSwitcher";
-import useLocalStorageState from "hooks/useLocalStoargeState";
-import { Fragment } from "react";
-import { useDispatch } from "react-redux";
-import SidebarNavigation from "./SidebarNavigation";
+import { Button } from '@chakra-ui/button';
+import { Box, Divider, Flex } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/react';
+import axios from 'axios';
+import { ColorModeSwitcher } from 'ColorModeSwitcher';
+import useLocalStorageState from 'hooks/useLocalStoargeState';
+import { Fragment } from 'react';
+import { useDispatch } from 'react-redux';
+import SidebarNavigation from './SidebarNavigation';
 
-const DashboardLayout = (props) => {
+const DashboardLayout = props => {
   const dispatch = useDispatch();
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    let logoutApi = await axios.get('/api/retailers/re_logout');
     dispatch({
-      type: "logout",
+      type: 'logout',
     });
   };
   return (
