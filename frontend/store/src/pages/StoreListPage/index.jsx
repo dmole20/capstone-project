@@ -1,13 +1,13 @@
-import { Button } from "@chakra-ui/button";
-import { useColorMode } from "@chakra-ui/color-mode";
+import { Button } from '@chakra-ui/button';
+import { useColorMode } from '@chakra-ui/color-mode';
 import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-} from "@chakra-ui/form-control";
-import { useDisclosure } from "@chakra-ui/hooks";
-import { Input } from "@chakra-ui/input";
-import { Box, Flex, HStack } from "@chakra-ui/layout";
+} from '@chakra-ui/form-control';
+import { useDisclosure } from '@chakra-ui/hooks';
+import { Input } from '@chakra-ui/input';
+import { Box, Flex, HStack } from '@chakra-ui/layout';
 import {
   Modal,
   ModalBody,
@@ -16,25 +16,29 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-} from "@chakra-ui/modal";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/tabs";
-import { useToast } from "@chakra-ui/toast";
-import DataTable from "components/DataTable";
-import EmployeeDetailPage from "pages/EmployeeDetailPage";
-import { useEffect, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Switch, useHistory } from "react-router";
-import { useRouteMatch } from "react-router";
-import { PrivateRoute } from "routes/ProtectedRoutes";
+} from '@chakra-ui/modal';
+import { useQuery } from 'react-query';
+import { Badge } from '@chakra-ui/react';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/tabs';
+import { useToast } from '@chakra-ui/toast';
+import axios from 'axios';
+import DataTable from 'components/DataTable';
+import FormModal from 'components/FormModal';
+import EmployeeDetailPage from 'pages/EmployeeDetailPage';
+import { useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Switch, useHistory } from 'react-router';
+import { useRouteMatch } from 'react-router';
+import { PrivateRoute } from 'routes/ProtectedRoutes';
 
-const StoreListPage = (props) => {
+const StoreListPage = props => {
   const { url } = useRouteMatch();
   const history = useHistory();
 
   const [tabIndex, setTabIndex] = useState(0);
   const { colorMode } = useColorMode();
 
-  const handleTabsChange = (index) => {
+  const handleTabsChange = index => {
     setTabIndex(index);
   };
   //   useEffect(() => {
@@ -44,43 +48,61 @@ const StoreListPage = (props) => {
   //       history.push(`${url}/contents`);
   //     }
   //   }, [tabIndex]);
+  const query = useQuery('shoes', async () => {
+    return await axios.get('/api/shoes/').then(data => data.data);
+  });
 
   const data = useMemo(
-    () => [
-      {
-        id: 1,
-        col1: "1",
-        col2: "나이키 강남",
-        col3: "관리자1",
-      },
-      {
-        id: 2,
-        col1: "2",
-        col2: "나이키 더현대 서울",
-        col3: "관리자2",
-      },
-      {
-        id: 3,
-        col1: "3",
-        col2: "홍대 Snkrs",
-        col3: "관리자3",
-      },
-    ],
-    [colorMode]
+    () =>
+      query?.data?.shoes?.length > 0
+        ? query?.data?.shoes?.map((shoe, idx) => ({
+            ...shoe,
+            id: shoe._id,
+            col1: idx + 1,
+            col2: shoe.shoesName,
+            status: shoe.status,
+          }))
+        : [],
+    [colorMode, query.data]
   );
   const columns = useMemo(
     () => [
       {
-        Header: "NO",
-        accessor: "col1",
+        Header: 'NO',
+        accessor: 'col1',
       },
       {
-        Header: "매장명",
-        accessor: "col2",
+        Header: '응모이름',
+        accessor: 'col2',
       },
       {
-        Header: "관리자명",
-        accessor: "col3",
+        Header: '발매가',
+        accessor: 'price',
+      },
+      {
+        Header: '마감현황',
+        accessor: 'col3',
+        Cell: ({ row }) => {
+          if (row.original.status === 'done') {
+            return (
+              <Badge variant="outline" colorScheme="red" fontSize="xl">
+                완료
+              </Badge>
+            );
+          } else if (row.original.status === 'progressing') {
+            return (
+              <Badge variant="outline" colorScheme="green" fontSize="xl">
+                진행중
+              </Badge>
+            );
+          } else {
+            return (
+              <Badge variant="outline" colorScheme="yellow" fontSize="xl">
+                시작 전
+              </Badge>
+            );
+          }
+        },
       },
     ],
     [colorMode]
@@ -94,44 +116,60 @@ const StoreListPage = (props) => {
   } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
-  const handleRowClick = (val) => {
-    history.push(`${url}/${val.id}`);
+  const handleRowClick = val => {
+    history.push(`${url}/${val.id}`, val);
   };
 
-  function onSubmit(values) {
+  async function onSubmit(values) {
     toast.closeAll();
     setIsLoading(true);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (values.loginID === "wrong") {
-          if (!toast.isActive("login-error")) {
-            toast({
-              id: "login-error",
-              title: "로그인 실패",
-              description: "아이디 또는 비밀번호를 다시 확인해주세요.",
-              status: "error",
-              duration: 9000,
-              isClosable: true,
-            });
-          }
-        } else {
-          if (!toast.isActive("login-success")) {
-            toast({
-              id: "login-success",
-              title: "등록 성공.",
-              description: "Hello World",
-              status: "success",
-              duration: 9000,
-              isClosable: true,
-            });
-          }
+    console.log(values);
+    let uploadResult = await axios
+      .post('/api/shoes', { ...values })
+      .then(() => {
+        if (!toast.isActive('login-success')) {
+          toast({
+            id: 'login-success',
+            title: '등록 성공.',
+            description: 'Hello World',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          });
         }
+        onClose();
+        query.refetch();
+      })
+      .catch(() => {
+        if (!toast.isActive('login-error')) {
+          toast({
+            id: 'login-error',
+            title: '등록 실패',
+            description: '다시 확인해주세요.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .finally(() => {
         setIsLoading(false);
-      }, 500);
-    });
+      });
+    return;
   }
+  const modalForm = useForm();
   return (
     <Box>
+      <FormModal
+        title={'응모 생성'}
+        isOpen={isOpen}
+        onClose={onClose}
+        modalForm={modalForm}
+        onSubmit={onSubmit}
+      />
+      <Box display="flex" p={5}>
+        <Button onClick={onOpen}>응모 생성</Button>
+      </Box>
       <DataTable data={data} columns={columns} onRowClick={handleRowClick} />
     </Box>
   );

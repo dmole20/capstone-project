@@ -16,6 +16,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/modal';
 import { Radio, RadioGroup } from '@chakra-ui/radio';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -34,6 +35,28 @@ const FormModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [value, setValue] = useState('1');
 
+  // shoesName,
+  // imageUrl,
+  // price,
+  // m_240,
+  // m_245,
+  // m_250,
+  // m_255,
+  // m_260,
+  // m_265,
+  // m_270,
+  // m_275,
+  // m_280,
+  // m_285,
+  // m_290,
+  // m_295,
+  // m_300,
+  // m_305,
+  // m_310,
+  let sizeOptions = [
+    240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 305, 310,
+  ];
+
   return (
     <Modal
       isOpen={isOpen}
@@ -47,36 +70,85 @@ const FormModal = ({
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalBody>
-            <FormControl isInvalid={errors?.employeeName}>
-              <FormLabel htmlFor="employeeName">성명</FormLabel>
+          <ModalBody maxHeight="96vh" overflow="auto">
+            <FormControl isInvalid={errors?.shoesName}>
+              <FormLabel htmlFor="shoesName">모델명</FormLabel>
               <Controller
                 render={({ field }) => <Input {...field} />}
-                name="employeeName"
+                name="shoesName"
                 control={control}
                 defaultValue=""
-                rules={{ required: '성명은 필수 입력값입니다.' }}
+                rules={{ required: '모델명은 필수 입력값입니다.' }}
               />
               <FormErrorMessage>
-                {errors?.employeeName && errors?.employeeName.message}
+                {errors?.shoesName && errors?.shoesName.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={errors?.employeePhone}>
-              <FormLabel htmlFor="employeePhone">휴대폰번호</FormLabel>
+            <FormControl isInvalid={errors?.imageUrl}>
+              <FormLabel htmlFor="imageUrl">상품 이미지 링크</FormLabel>
               <Controller
                 render={({ field }) => <Input {...field} />}
-                name="employeePhone"
+                name="imageUrl"
                 control={control}
                 defaultValue=""
                 rules={{
-                  required: '휴대폰번호는 필수 입력값입니다.',
+                  required: '상품 이미지는 필수 입력값입니다.',
                 }}
               />
               <FormErrorMessage>
-                {errors?.employeePhone && errors?.employeePhone.message}
+                {errors?.imageUrl && errors?.imageUrl.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={errors?.employeePhone}>
+            <FormControl isInvalid={errors?.price}>
+              <FormLabel htmlFor="price">발매가</FormLabel>
+              <Controller
+                render={({ field }) => <Input type="number" {...field} />}
+                name="price"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: '발매가는 필수 입력값입니다.',
+                }}
+              />
+              <FormErrorMessage>
+                {errors?.price && errors?.price.message}
+              </FormErrorMessage>
+            </FormControl>
+
+            <Text paddingY={5}>사이즈 별 수량</Text>
+            {sizeOptions.map(size => (
+              <Flex key={size}>
+                <Box flex="1" fontSize="5xl">
+                  {size}
+                </Box>
+                <Box flex="1">
+                  <FormControl isInvalid={errors[`m_${size}`]} height="100%">
+                    {/* <FormLabel htmlFor="m_240">발매수량</FormLabel> */}
+                    <Controller
+                      render={({ field }) => (
+                        <Input
+                          type="number"
+                          {...field}
+                          height="100%"
+                          fontSize="3xl"
+                        />
+                      )}
+                      name={`m_${size}`}
+                      control={control}
+                      defaultValue={0}
+                      rules={{
+                        required: '발매수량는 필수 입력값입니다.',
+                      }}
+                    />
+                    <FormErrorMessage>
+                      {errors[`m_${size}`] && errors[`m_${size}`].message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </Box>
+              </Flex>
+            ))}
+
+            {/* <FormControl isInvalid={errors?.employeePhone}>
               <FormLabel htmlFor="favoriteItem">관심상품</FormLabel>
               <Controller
                 render={({ field }) => (
@@ -98,7 +170,7 @@ const FormModal = ({
               <FormErrorMessage>
                 {errors?.favoriteItem && errors?.favoriteItem.message}
               </FormErrorMessage>
-            </FormControl>
+            </FormControl> */}
           </ModalBody>
 
           <ModalFooter>

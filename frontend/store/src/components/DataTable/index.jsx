@@ -109,7 +109,7 @@ const DataTable = ({ columns, data, onRowClick, ...props }) => {
           })}
         </Tbody>
       </Table>
-      <HStack justify="center" mt="5">
+      {/* <HStack justify="center" mt="5">
         <IconButton
           variant="outline"
           colorScheme="teal"
@@ -202,7 +202,7 @@ const DataTable = ({ columns, data, onRowClick, ...props }) => {
           disabled={pageIndex === pageCount - 1}
           onClick={() => gotoPage(pageCount - 1)}
         />
-      </HStack>
+      </HStack> */}
     </Fragment>
   );
 };

@@ -48,37 +48,37 @@ function LoginPage() {
     toast.closeAll();
     setIsLoading(true);
 
-    let loginPostCall = await axios.post('/api/users/login', { ...values });
-    console.log(loginPostCall);
-    return new Promise(resolve => {
-      setTimeout(() => {
-        if (values.loginID === 'wrong') {
-          if (!toast.isActive('login-error')) {
-            toast({
-              id: 'login-error',
-              title: '로그인 실패',
-              description: '아이디 또는 비밀번호를 다시 확인해주세요.',
-              status: 'error',
-              duration: 9000,
-              isClosable: true,
-            });
-          }
-        } else {
-          if (!toast.isActive('login-success')) {
-            toast({
-              id: 'login-success',
-              title: '로그인 성공.',
-              description: 'Hello World',
-              status: 'success',
-              duration: 9000,
-              isClosable: true,
-            });
-          }
-          dispatch({ type: 'setAuthorizationToken' });
+    let loginPostCall = await axios
+      .post('/api/users/login', { ...values })
+      .then(() => {
+        if (!toast.isActive('login-success')) {
+          toast({
+            id: 'login-success',
+            title: '로그인 성공.',
+            description: 'Hello World',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          });
         }
+        dispatch({ type: 'setAuthorizationToken' });
+      })
+      .catch(() => {
+        if (!toast.isActive('login-error')) {
+          toast({
+            id: 'login-error',
+            title: '로그인 실패',
+            description: '아이디 또는 비밀번호를 다시 확인해주세요.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      })
+      .finally(() => {
         setIsLoading(false);
-      }, 500);
-    });
+      });
+    return;
   }
   const handleRegister = () => {
     history.push('/register');
