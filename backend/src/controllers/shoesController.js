@@ -4,7 +4,7 @@ import User from "../models/User";
 
 export const getShoes = async (req, res) => {
   const shoes = await Shoes.find({}).populate("retailer");
-  return res.json({ shoes });
+  return res.json(shoes);
 };
 
 // shoes의 이름, image, 가격, 240~310 각 사이즈 수량 받아서 db에 추가
@@ -58,7 +58,7 @@ export const uploadShoes = async (req, res) => {
     });
     const retailer = await Retailer.findById(_id);
     retailer.shoes.push(newShoes._id);
-    retailer.save();
+    await retailer.save();
     return res.sendStatus(201);
   } catch (error) {
     return res.status(400).json({ errorMessage: error._message });
@@ -106,7 +106,7 @@ export const getShoesDetail = async (req, res) => {
   if (!shoes) {
     return res.status(400).json({ errorMessage: "Not found." });
   }
-  return res.json({ shoes });
+  return res.json(shoes);
 };
 
 // 해당 id의 shoes를 db에서 삭제. 아직 연관된 다른 collection에서 삭제는 구현안됨.
@@ -182,8 +182,8 @@ export const applyEvent = async (req, res) => {
     default:
   }
   user.applyings.push(shoes._id);
-  shoes.save();
-  user.save();
+  await shoes.save();
+  await user.save();
   return res.sendStatus(200);
 };
 
@@ -210,7 +210,7 @@ const drawForSize = size => {
   return size;
 };
 
-// (해당 shoes의 주인 retailer로 로그인했을 시에만) 해당 id의 shoes의 추첨하고 당첨자를 db에 저장 (미완성)
+// (해당 shoes의 주인 retailer로 로그인했을 시에만) 해당 id의 shoe를 추첨하고 당첨자를 db에 저장 (미완성)
 export const drawWinner = async (req, res) => {
   const {
     session: {
@@ -228,8 +228,21 @@ export const drawWinner = async (req, res) => {
   }
 
   // draw
-  shoes.size = shoes.size.map(drawForSize);
-  console.log(shoes);
-
+  shoes.size.m_240 = drawForSize(shoes.size.m_240);
+  shoes.size.m_245 = drawForSize(shoes.size.m_245);
+  shoes.size.m_250 = drawForSize(shoes.size.m_250);
+  shoes.size.m_255 = drawForSize(shoes.size.m_255);
+  shoes.size.m_260 = drawForSize(shoes.size.m_260);
+  shoes.size.m_265 = drawForSize(shoes.size.m_265);
+  shoes.size.m_270 = drawForSize(shoes.size.m_270);
+  shoes.size.m_275 = drawForSize(shoes.size.m_275);
+  shoes.size.m_280 = drawForSize(shoes.size.m_280);
+  shoes.size.m_285 = drawForSize(shoes.size.m_285);
+  shoes.size.m_290 = drawForSize(shoes.size.m_290);
+  shoes.size.m_295 = drawForSize(shoes.size.m_295);
+  shoes.size.m_300 = drawForSize(shoes.size.m_300);
+  shoes.size.m_305 = drawForSize(shoes.size.m_305);
+  shoes.size.m_310 = drawForSize(shoes.size.m_310);
+  await shoes.save();
   res.sendStatus(200);
 };

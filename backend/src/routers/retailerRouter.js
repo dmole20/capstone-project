@@ -2,6 +2,7 @@ import express from "express";
 import {
   getRetailerDetail,
   getRetailerProfile,
+  getRetailers,
   re_logout,
   re_postJoin,
   re_postLogin,
@@ -14,6 +15,7 @@ import {
 
 const retailerRouter = express.Router();
 
+retailerRouter.get("/", getRetailers);
 retailerRouter.post("/re_join", re_postJoin);
 retailerRouter.post("/re_login", re_postLogin);
 retailerRouter.get("/re_logout", re_logout);
