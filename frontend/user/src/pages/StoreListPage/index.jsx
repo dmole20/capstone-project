@@ -83,7 +83,7 @@ const StoreListPage = props => {
   };
   const onSubmit = async () => {
     let drawEnter = await axios
-      .post(`/api/shoes/${selectedID}/draw`)
+      .post(`/api/shoes/${selectedID}/applying`)
       .then(() => {
         if (!toast.isActive('login-error')) {
           toast({
@@ -121,8 +121,8 @@ const StoreListPage = props => {
         onSubmit={onSubmit}
       />
       <Wrap p={5} spacing={10}>
-        {drawListQuery?.data?.shoes
-          ? drawListQuery?.data?.shoes.map(shoe => (
+        {drawListQuery?.data
+          ? drawListQuery?.data.map(shoe => (
               <WrapItem key={shoe._id} onClick={e => handleItemClick(e, shoe)}>
                 <Center
                   w="360px"

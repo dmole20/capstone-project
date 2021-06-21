@@ -94,12 +94,12 @@ const StoreDetailPage = props => {
             <Box flex="1">응모현황</Box>
           </Flex>
         </ListItem>
-        {Object.keys(l.state.sizeStocks).map(k => (
+        {Object.keys(l.state.size).map(k => (
           <ListItem key={k}>
             <Flex>
               <Box flex="1">{k.split('_')[1]}</Box>
-              <Box flex="1">{l.state.sizeStocks[k]}</Box>
-              <Box flex="1">{l.state.applicants[k].length}</Box>
+              <Box flex="1">{l.state.size[k].stocks}</Box>
+              <Box flex="1">{l.state.size[k].applicants.length}</Box>
             </Flex>
           </ListItem>
         ))}
