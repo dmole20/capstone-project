@@ -159,34 +159,49 @@ export const applyEvent = async (req, res) => {
   switch (user.size) {
     case 240:
       shoes.size.m_240.applicants.push(user._id);
+      break;
     case 245:
       shoes.size.m_245.applicants.push(user._id);
+      break;
     case 250:
       shoes.size.m_250.applicants.push(user._id);
+      break;
     case 255:
       shoes.size.m_255.applicants.push(user._id);
+      break;
     case 260:
       shoes.size.m_260.applicants.push(user._id);
+      break;
     case 265:
       shoes.size.m_265.applicants.push(user._id);
+      break;
     case 270:
       shoes.size.m_270.applicants.push(user._id);
+      break;
     case 275:
       shoes.size.m_275.applicants.push(user._id);
+      break;
     case 280:
       shoes.size.m_280.applicants.push(user._id);
+      break;
     case 285:
       shoes.size.m_285.applicants.push(user._id);
+      break;
     case 290:
       shoes.size.m_290.applicants.push(user._id);
+      break;
     case 295:
       shoes.size.m_295.applicants.push(user._id);
+      break;
     case 300:
       shoes.size.m_300.applicants.push(user._id);
+      break;
     case 305:
       shoes.size.m_305.applicants.push(user._id);
+      break;
     case 310:
       shoes.size.m_310.applicants.push(user._id);
+      break;
     default:
   }
   user.applyings.push(shoes._id);
