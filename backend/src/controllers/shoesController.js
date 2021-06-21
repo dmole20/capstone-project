@@ -1,6 +1,7 @@
 import Shoes from "../models/Shoes";
 import Retailer from "../models/Retailer";
 import User from "../models/User";
+import mongoose from "mongoose";
 
 export const getShoes = async (req, res) => {
   const shoes = await Shoes.find({}).populate("retailer");
@@ -122,7 +123,14 @@ export const deleteShoes = async (req, res) => {
   if (String(shoes.retailer) !== String(_id)) {
     return res.status(403).json({ errorMessage: "You are not a seller." });
   }
+  const retailer = await Retailer.findById(_id);
+
   await Shoes.findByIdAndDelete(id);
+  const deletedId = mongoose.Types.ObjectId(id);
+  const idx = retailer.shoes.indexOf(deletedId);
+  retailer.shoes.splice(idx, 1);
+  await retailer.save();
+
   return res.sendStatus(200);
 };
 
