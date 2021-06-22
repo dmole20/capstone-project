@@ -4,6 +4,7 @@ import {
   deleteShoes,
   drawWinner,
   endDeadline,
+  endDraw,
   getShoes,
   getShoesDetail,
   startDeadline,
@@ -19,5 +20,6 @@ shoesRouter.delete("/:id", retailerOnlyMiddleware, deleteShoes); // retailer가�
 shoesRouter.post("/:id/applying", userOnlyMiddleware, applyEvent); // user가 해당 id를 가진 shoes에 응모 참여
 shoesRouter.post("/:id/start", retailerOnlyMiddleware, startDeadline); // 해당 id를 가진 shoes의 deadlineStatus를 1로 만듦
 shoesRouter.post("/:id/end", retailerOnlyMiddleware, endDeadline); // 해당 id를 가진 shoes의 deadlineStatus를 2로 만듦
+shoesRouter.post("/:id/end_draw", retailerOnlyMiddleware, endDraw); // 해당 id를 가진 shoes의 deadlineStatus를 3으로 만듦
 shoesRouter.post("/:id/draw", retailerOnlyMiddleware, drawWinner); // retailer가 해당 id를 가진 shoes의 추첨시작
 export default shoesRouter;
