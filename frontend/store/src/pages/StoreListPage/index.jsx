@@ -86,10 +86,16 @@ const StoreListPage = props => {
         Header: '마감현황',
         accessor: 'col3',
         Cell: ({ row }) => {
-          if (row.original.deadlineStatus === 2) {
+          if (row.original.deadlineStatus === 3) {
+            return (
+              <Badge variant="outline" colorScheme="purple" fontSize="xl">
+                추첨 완료
+              </Badge>
+            );
+          } else if (row.original.deadlineStatus === 2) {
             return (
               <Badge variant="outline" colorScheme="red" fontSize="xl">
-                완료
+                응모 완료
               </Badge>
             );
           } else if (row.original.deadlineStatus === 1) {

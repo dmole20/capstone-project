@@ -74,7 +74,7 @@ const StoreListPage = props => {
 
     if (shoe.deadlineStatus === 0) {
       handle0Progress();
-    } else if (shoe.deadlineStatus === 2) {
+    } else if (shoe.deadlineStatus === 2 || shoe.deadlineStatus === 3) {
       handle2Progress();
     } else {
       setSelectedID(shoe._id);
@@ -136,6 +136,7 @@ const StoreListPage = props => {
                   flexDir="column"
                   cursor="pointer"
                   p={4}
+                  height="100%"
                 >
                   {shoe.retailer.shop}
                   <Box>{shoe.shoesName}</Box>

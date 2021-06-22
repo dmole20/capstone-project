@@ -2,6 +2,8 @@ import DashboardLayout from 'layout/DashboardLayout';
 import AnotherPage from 'pages/AnotherPage';
 import CompanyDetailPage from 'pages/CompanyDetailPage';
 import EmployeeDetailPage from 'pages/EmployeeDetailPage';
+import HistoryPage from 'pages/HistoryPage';
+import HistoryDetailPage from 'pages/HistoryPage/HistoryDetailPage';
 import HomePage from 'pages/HomePage';
 import StoreListPage from 'pages/StoreListPage';
 import StoreDetailPage from 'pages/StoreListPage/StoreDetailPage';
@@ -40,6 +42,12 @@ const ProtectedRoutes = () => {
         </PrivateRoute>
         <PrivateRoute exact path="/draw">
           <StoreListPage />
+        </PrivateRoute>
+        <PrivateRoute exact path="/history">
+          <HistoryPage />
+        </PrivateRoute>
+        <PrivateRoute exact path="/history/:historyID">
+          <HistoryDetailPage />
         </PrivateRoute>
         <PrivateRoute exact path="/draw/:storeID">
           <StoreDetailPage />

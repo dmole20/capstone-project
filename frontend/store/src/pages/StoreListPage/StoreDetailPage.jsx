@@ -86,7 +86,7 @@ const StoreDetailPage = props => {
     console.log('random');
     let drawEnd = await axios
       .post(`/api/shoes/${l.state.id}/draw`)
-      .then(() => {
+      .then(async () => {
         if (!toast.isActive('login-success')) {
           toast({
             id: 'login-success',
@@ -97,7 +97,10 @@ const StoreDetailPage = props => {
             isClosable: true,
           });
         }
-        queryClient.invalidateQueries('profile');
+        await axios.post(`/api/shoes/${l.state.id}/end_draw`).then(() => {
+          queryClient.invalidateQueries('profile');
+          history.push('/draw');
+        });
       })
       .catch(() => {
         if (!toast.isActive('login-error')) {

@@ -23,9 +23,9 @@ const NavigationOptions = [
     slug: '/draw',
   },
   {
-    id: 'draw-history',
+    id: 'history',
     displayValue: '응모 내역',
-    slug: '/draw-history',
+    slug: '/history',
   },
   {
     id: 'product',
