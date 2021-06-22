@@ -141,6 +141,11 @@ const StoreListPage = props => {
                   <Box>{shoe.shoesName}</Box>
                   <Image src={shoe.imageUrl}></Image>
                   <Box paddingY={3}>
+                    {shoe.deadlineStatus === 3 && (
+                      <Badge fontSize="2xl" colorScheme="purple">
+                        추첨 완료
+                      </Badge>
+                    )}
                     {shoe.deadlineStatus === 2 && (
                       <Badge fontSize="2xl" colorScheme="red">
                         응모 마감

@@ -82,6 +82,36 @@ const StoreDetailPage = props => {
         }
       });
   };
+  const handleDrawRandom = async () => {
+    console.log('random');
+    let drawEnd = await axios
+      .post(`/api/shoes/${l.state.id}/draw`)
+      .then(() => {
+        if (!toast.isActive('login-success')) {
+          toast({
+            id: 'login-success',
+            title: '추첨 완료.',
+            description: 'Hello World',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+        queryClient.invalidateQueries('profile');
+      })
+      .catch(() => {
+        if (!toast.isActive('login-error')) {
+          toast({
+            id: 'login-error',
+            title: '추첨 실패',
+            description: '다시 확인해주세요.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      });
+  };
   return (
     <VStack p={5}>
       <Image width="400px" src={l.state.imageUrl}></Image>
@@ -105,12 +135,16 @@ const StoreDetailPage = props => {
         ))}
       </List>
       <HStack p={4}>
-        {l.state.deadlineStatus === 0 ? (
+        {l.state.deadlineStatus === 0 && (
           <Button color="primary" onClick={handleDrawStart}>
             응모 시작
           </Button>
-        ) : (
+        )}
+        {l.state.deadlineStatus === 1 && (
           <Button onClick={handleDrawEnd}>응모 마감</Button>
+        )}
+        {l.state.deadlineStatus === 2 && (
+          <Button onClick={handleDrawRandom}>당첨자 추첨</Button>
         )}
       </HStack>
     </VStack>
