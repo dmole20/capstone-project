@@ -47,6 +47,9 @@ export default function HistoryDetailPage() {
                 key={sz}
                 fontSize={sz.split('_')[1] == userProfile.size ? '3xl' : 'l'}
                 bg={sz.split('_')[1] == userProfile.size ? 'teal' : 'default'}
+                color={
+                  sz.split('_')[1] == userProfile.size ? '#fff' : 'inherit'
+                }
               >
                 <Flex>
                   <Flex flex="1">{sz.split('_')[1]}</Flex>
